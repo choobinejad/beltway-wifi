@@ -114,6 +114,6 @@ def find_companions(source, es):
 
     end = datetime.now()
     print("\n{} queries | {} seconds | {} seconds per query".format(
-        query_count, (end-start).seconds, (end-start).seconds/query_count)
+        query_count, (end-start).seconds, (end-start).seconds/(query_count + 1))
     )
     return counter, results[:10], unique_companions
