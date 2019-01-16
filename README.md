@@ -22,3 +22,13 @@ python story.py\
 
 THen log in to Kibana and start with the `Start Here` dashboard...  
 \# TODO moar script
+
+Show off some analytic stuff like this:
+```bash
+python analytics_demo.py\
+ companions\
+ --es_host=$ES_HOST_PORT\
+ --user=$YOUR_USERNAME\
+ --password=$YOUR_PASSWORD\
+ --mac=$MAC_OF_INTERST
+```

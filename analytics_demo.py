@@ -1,11 +1,13 @@
 from datetime import datetime
 import fire
 from prettytable import PrettyTable
-from analytics.travel import find_companions as fc
+from utilities.elastic import get_elastic_client
+from analytics.travel import find_companions
 
 
-def find_companions(mac):
-    counter, result, unique_companions = fc(mac)
+def companions(es_host, user, password, mac):
+    es = get_elastic_client(es_host, user, password)
+    counter, result, unique_companions = find_companions(mac, es)
 
     # Print out the companions list
     print('\nThe `companions` algorithm identified {} unique companions for {}. They are:'.format(
