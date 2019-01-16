@@ -1,0 +1,66 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "area": {
+          "type": "long"
+        },
+        "average_signal": {
+          "type": "long"
+        },
+        "cell": {
+          "type": "long"
+        },
+        "changeable": {
+          "type": "boolean"
+        },
+        "created": {
+          "type": "date",
+          "format": "epoch_second"
+        },
+        "lat": {
+          "type": "double"
+        },
+        "lon": {
+          "type": "double"
+        },
+        "mcc": {
+          "type": "long"
+        },
+        "net": {
+          "type": "long"
+        },
+        "radio": {
+          "type": "keyword"
+        },
+        "range": {
+          "type": "long"
+        },
+        "samples": {
+          "type": "long"
+        },
+        "unit": {
+          "type": "long"
+        },
+        "updated": {
+          "type": "date",
+          "format": "epoch_second"
+        },
+        "location": {
+          "type": "geo_point"
+        },
+        "tower_location": {
+          "type": "alias",
+          "path": "location"
+        }
+      }
+    }
+  }
+}
