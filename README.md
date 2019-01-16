@@ -32,3 +32,12 @@ python analytics_demo.py\
  --password=$YOUR_PASSWORD\
  --mac=$MAC_OF_INTERST
 ```
+
+Or get a seed for the travel analysis, in case you don't have one already:
+```bash
+python analytics_demo.py\
+ suggest\
+ --es_host=$ES_HOST_PORT\
+ --user=$YOUR_USERNAME\
+ --password=$YOUR_PASSWORD\
+```

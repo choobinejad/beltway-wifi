@@ -35,5 +35,27 @@ def companions(es_host, user, password, mac):
     print(indexed)
 
 
+def suggest(es_host, user, password):
+    es = get_elastic_client(es_host, user, password)
+    seed = es.search(
+        'network_events',
+        '_doc',
+        body= \
+        {
+            "query": {"match_all": {}},
+            "size": 0,
+            "aggs": {
+                "top_term": {
+                    "terms": {
+                        "field": "source",
+                        "size": 1
+                    }
+                }
+            }
+        }
+    )['aggregations']['top_term']['buckets'][0]['key']
+    return '\n{}\n'.format(seed)
+
+
 if __name__ == '__main__':
     fire.Fire()
