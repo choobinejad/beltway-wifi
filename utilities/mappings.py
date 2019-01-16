@@ -1,4 +1,5 @@
 import json
+import time
 
 
 def _put_towers_mapping(es):
@@ -63,3 +64,4 @@ def put_all_mappings(es):
     _put_towers_mapping(es)
     _put_waps_mapping(es)
     _put_network_activity_mapping(es)
+    time.sleep(1)
