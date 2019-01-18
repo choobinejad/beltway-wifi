@@ -1,6 +1,7 @@
 import json
 import requests
 from requests.auth import HTTPBasicAuth
+from elasticsearch import Elasticsearch
 
 
 pattern_ids = ['towers,waps', 'waps', 'towers', 'network_events', 'towers,waps*', 'waps*', 'towers*', 'network_events*']
@@ -116,3 +117,71 @@ def post_dashboards(kibana_base, user, password):
         if r.status_code not in [200, 409]:
             print(r.json())
     print('Configured Kibana dashboard: {}'.format(db['attributes']['title']))
+
+
+def create_spaces(kibana_base, user, password):
+    spaces = [
+        ('analyst', dict(id='analyst', name='Analyst', description='A space for analysts.', initials='A')),
+        ('developer', dict(id='developer', name='Developer', description='A space for developers.', initials='D'))
+    ]
+    for name, config in spaces:
+        r = requests.get('{}/api/spaces/space/{}'.format(kibana_base, name), auth=HTTPBasicAuth(user, password))
+        if r.status_code != 404:
+            print('Space "{}" already exists.'.format(name))
+            continue
+        r = requests.post(
+            '{}/api/spaces/space'.format(kibana_base),
+            auth=HTTPBasicAuth(user, password),
+            headers={'kbn-xsrf': 'it-is-an-app '},
+            json=config
+        )
+        print('Configured the "{}" space.'.format(name))
+
+
+def create_roles(es):
+    existing_roles = es.xpack.security.get_role().keys()
+    roles = [
+        (
+            'analyst',
+            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
+                {'names': ['towers*', 'waps*', 'network_events*'],
+                 'privileges': ['read', 'monitor', 'read_cross_cluster', 'view_index_metadata'],
+                 'field_security': {'grant': ['*']}}], 'run_as': []},
+             'kibana': {'global': [], 'space': {'analyst': ['read']}}}
+        ),
+        (
+            'developer',
+            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
+                {'names': ['*'], 'privileges': ['all'], 'field_security': {'grant': ['*']}}], 'run_as': ['analyst']},
+             'kibana': {'global': [], 'space': {'developer': ['all'], 'analyst': ['read']}}}
+        )
+    ]
+    for role, body in roles:
+        if role in existing_roles:
+            print('Role "{}" already exists.'.format(role))
+            continue
+        es.xpack.security.put_role(role, body=body)
+        print('Created security role: "{}"'.format(role))
+
+
+def create_users(es, account_password):
+
+    users = [
+        ('analyst', ['kibana_user', 'machine_learning_user', 'watcher_user', 'monitoring_user', 'reporting_user',
+                     'analyst']),
+        ('developer', ['watcher_admin', 'kibana_user', 'machine_learning_user', 'beats_admin', 'machine_learning_admin',
+                       'watcher_user', 'monitoring_user', 'reporting_user', 'ingest_admin', 'developer'])
+    ]
+    existing_users = es.xpack.security.get_user().keys()
+    for user, roles in users:
+        if user in existing_users:
+            print('User "{}" already exists.'.format(user))
+            continue
+        body = dict(
+            email='{}@nope.com'.format(user),
+            full_name='{} Q. User'.format(user.capitalize()),
+            password=account_password,
+            roles=roles
+        )
+        es.xpack.security.put_user(user, body=body)
+        print('Created user account: "{}" with password "{}"'.format(user, account_password))
