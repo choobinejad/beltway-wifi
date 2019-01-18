@@ -20,7 +20,7 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     :param kibana_host: The Kibana host:port to connect to. E.g. "https://acme.com:5601"
     :param user: ES/Kibana username to connect with
     :param password: ES/Kibana username to connect with
-    :param user_password: the desired password for the new analyst/developer users, if they don't already exist
+    :param new_users_password: the desired password for the new analyst/developer users, if they don't already exist
     :param run_seconds: How long to keep the demo streams alive.
     :return: None
     """
