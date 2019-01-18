@@ -1,0 +1,65 @@
+{
+  "kibana_user_secure_spaces": {
+    "indices": [
+      {
+        "names": [
+          ".kibana*"
+        ],
+        "privileges": [
+          "manage",
+          "read",
+          "index",
+          "delete"
+        ],
+        "field_security": {
+          "grant": [
+            "*"
+          ]
+        }
+      }
+    ]
+  },
+  "analyst": {
+    "indices": [
+      {
+        "names": [
+          "towers*",
+          "waps*",
+          "network_events*"
+        ],
+        "privileges": [
+          "read",
+          "monitor",
+          "read_cross_cluster",
+          "view_index_metadata"
+        ],
+        "field_security": {
+          "grant": [
+            "*"
+          ]
+        }
+      }
+    ]
+  },
+  "developer": {
+    "cluster": [],
+    "indices": [
+      {
+        "names": [
+          "*"
+        ],
+        "privileges": [
+          "all"
+        ],
+        "field_security": {
+          "grant": [
+            "*"
+          ]
+        }
+      }
+    ],
+    "run_as": [
+      "analyst"
+    ]
+  }
+}

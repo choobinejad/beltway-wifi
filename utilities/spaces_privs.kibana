@@ -1,0 +1,24 @@
+{
+  "analyst": {
+    "kibana":{
+      "global":[],
+      "space":{
+        "analyst":[
+          "read"
+        ]
+      }
+    }
+  },
+  "developer": {
+    "kibana":{
+      "global":[
+        "read"
+      ],
+      "space": {
+        "developer": [
+          "all"
+        ]
+      }
+    }
+  }
+}
