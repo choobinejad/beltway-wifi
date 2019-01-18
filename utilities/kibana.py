@@ -142,6 +142,12 @@ def create_roles(es):
     existing_roles = es.xpack.security.get_role().keys()
     roles = [
         (
+            'kibana_user_secure_spaces',
+            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
+                {'names': ['.kibana*'], 'privileges': ['manage', 'read', 'index', 'delete'],
+                 'field_security': {'grant': ['*']}}], 'run_as': []}, 'kibana': {'global': [], 'space': {}}}
+        ),
+        (
             'analyst',
             {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
                 {'names': ['towers*', 'waps*', 'network_events*'],
@@ -167,10 +173,11 @@ def create_roles(es):
 def create_users(es, account_password):
 
     users = [
-        ('analyst', ['kibana_user', 'machine_learning_user', 'watcher_user', 'monitoring_user', 'reporting_user',
-                     'analyst']),
-        ('developer', ['watcher_admin', 'kibana_user', 'machine_learning_user', 'beats_admin', 'machine_learning_admin',
-                       'watcher_user', 'monitoring_user', 'reporting_user', 'ingest_admin', 'developer'])
+        ('analyst', ['kibana_user_secure_spaces', 'machine_learning_user', 'watcher_user', 'monitoring_user',
+                     'reporting_user', 'analyst']),
+        ('developer', ['watcher_admin', 'kibana_user_secure_spaces', 'machine_learning_user', 'beats_admin',
+                       'machine_learning_admin', 'watcher_user', 'monitoring_user', 'reporting_user', 'ingest_admin',
+                       'developer'])
     ]
     existing_users = es.xpack.security.get_user().keys()
     for user, roles in users:
