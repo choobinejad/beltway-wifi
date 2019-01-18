@@ -138,57 +138,28 @@ def create_spaces(kibana_base, user, password):
         print('Configured the "{}" space.'.format(name))
 
 
-def create_roles(es):
-    existing_roles = es.xpack.security.get_role().keys()
-    roles = [
-        (
-            'kibana_user_secure_spaces',
-            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
-                {'names': ['.kibana*'], 'privileges': ['manage', 'read', 'index', 'delete'],
-                 'field_security': {'grant': ['*']}}], 'run_as': []}, 'kibana': {'global': [], 'space': {}}}
-        ),
-        (
-            'analyst',
-            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
-                {'names': ['towers*', 'waps*', 'network_events*'],
-                 'privileges': ['read', 'monitor', 'read_cross_cluster', 'view_index_metadata'],
-                 'field_security': {'grant': ['*']}}], 'run_as': []},
-             'kibana': {'global': [], 'space': {'analyst': ['read']}}}
-        ),
-        (
-            'developer',
-            {'metadata': {}, 'elasticsearch': {'cluster': [], 'indices': [
-                {'names': ['*'], 'privileges': ['all'], 'field_security': {'grant': ['*']}}], 'run_as': ['analyst']},
-             'kibana': {'global': [], 'space': {'developer': ['all'], 'analyst': ['read']}}}
-        )
-    ]
-    for role, body in roles:
-        if role in existing_roles:
-            print('Role "{}" already exists.'.format(role))
-            continue
-        es.xpack.security.put_role(role, body=body)
-        print('Created security role: "{}"'.format(role))
+def get_canvas_intro(kibana_base, user, password):
+    r = requests.get(
+        '{}/api/canvas/workpad/workpad-intro-architecture'.format(kibana_base),
+        auth=HTTPBasicAuth(user, password)
+    )
 
 
-def create_users(es, account_password):
-
-    users = [
-        ('analyst', ['kibana_user_secure_spaces', 'machine_learning_user', 'watcher_user', 'monitoring_user',
-                     'reporting_user', 'analyst']),
-        ('developer', ['watcher_admin', 'kibana_user_secure_spaces', 'machine_learning_user', 'beats_admin',
-                       'machine_learning_admin', 'watcher_user', 'monitoring_user', 'reporting_user', 'ingest_admin',
-                       'developer'])
-    ]
-    existing_users = es.xpack.security.get_user().keys()
-    for user, roles in users:
-        if user in existing_users:
-            print('User "{}" already exists.'.format(user))
-            continue
-        body = dict(
-            email='{}@nope.com'.format(user),
-            full_name='{} Q. User'.format(user.capitalize()),
-            password=account_password,
-            roles=roles
-        )
-        es.xpack.security.put_user(user, body=body)
-        print('Created user account: "{}" with password "{}"'.format(user, account_password))
+def post_canvas_workpad(kibana_base, user, password):
+    with open('./utilities/intro_workpad.kibana', 'r') as f:
+        workpad = json.load(f)
+    requests.delete(
+        url='{}/api/canvas/workpad/workpad-intro-architecture'.format(kibana_base),
+        headers={'kbn-xsrf': 'it-is-an-app '},
+        auth=HTTPBasicAuth(user, password)
+    )
+    r = requests.post(
+        url='{}/api/canvas/workpad'.format(kibana_base),
+        json=workpad,
+        headers={'kbn-xsrf': 'it-is-an-app '},
+        auth=HTTPBasicAuth(user, password)
+    )
+    if r.status_code not in [200]:
+        print(r.json())
+        print(r.status_code)
+    print('Configured workpad: "{}"'.format(workpad['name']))
