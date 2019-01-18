@@ -12,7 +12,7 @@ from customers.probes import generate_probes
 from customers.bad_gateway_customer import generate_angry_customer_probes
 
 
-def run(es_host, kibana_host, user, password, run_seconds=7200):
+def run(es_host, kibana_host, user, password, new_users_password, run_seconds=7200):
     """
     Run the main demo.
 
@@ -20,6 +20,7 @@ def run(es_host, kibana_host, user, password, run_seconds=7200):
     :param kibana_host: The Kibana host:port to connect to. E.g. "https://acme.com:5601"
     :param user: ES/Kibana username to connect with
     :param password: ES/Kibana username to connect with
+    :param user_password: the desired password for the new analyst/developer users, if they don't already exist
     :param run_seconds: How long to keep the demo streams alive.
     :return: None
     """
@@ -30,6 +31,9 @@ def run(es_host, kibana_host, user, password, run_seconds=7200):
     post_index_patterns(kibana_host, user, password)
     post_viz(kibana_host, user, password)
     post_dashboards(kibana_host, user, password)
+    create_spaces(kibana_host, user, password)
+    create_roles(es)
+    create_users(es, new_users_password)
 
     # Let's get the lay of the land for our company and partner resources.
     threading.Thread(target=index_company_wap_locations, args=[es], daemon=True).start()
