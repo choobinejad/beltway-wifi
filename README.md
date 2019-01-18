@@ -17,7 +17,8 @@ python story.py\
  --es_host=$ES_HOST_PORT\
  --kibana_host=$KIBANA_HOST_PORT\
  --user=$YOUR_USERNAME\
- --password=$YOUR_PASSWORD
+ --password=$YOUR_PASSWORD\
+ --new_users_password=$NEW_USERS_PASSWORD
 ```
 
 THen log in to Kibana and start with the `Start Here` dashboard...  
@@ -39,5 +40,5 @@ python analytics_demo.py\
  suggest\
  --es_host=$ES_HOST_PORT\
  --user=$YOUR_USERNAME\
- --password=$YOUR_PASSWORD\
+ --password=$YOUR_PASSWORD
 ```
