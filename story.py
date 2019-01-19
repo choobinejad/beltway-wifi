@@ -1,15 +1,15 @@
-import sys
 import time
 import threading
 import fire
-from utilities.elastic import get_elastic_client
-from utilities.kibana import *
-from utilities.mappings import put_all_mappings
-from emitters.wap import index_company_wap_locations
-from emitters.cell_partners import index_partner_towers
-from emitters.heartbeats import update_oldest_heartbeats
-from customers.probes import generate_probes
-from customers.bad_gateway_customer import generate_angry_customer_probes
+from utilities import elastic
+from utilities import kibana
+from utilities import security
+from utilities import mappings
+from emitters import wap
+from emitters import cell_partners
+from emitters import heartbeats
+from customers import probes
+from customers import bad_gateway_customer
 
 
 def run(es_host, kibana_host, user, password, new_users_password, run_seconds=7200):
@@ -26,23 +26,25 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     """
 
     # First let's configure our Elasticsearch indices and Kibana settings
-    es = get_elastic_client(es_host, user, password)
-    put_all_mappings(es)
-    post_index_patterns(kibana_host, user, password)
-    post_viz(kibana_host, user, password)
-    post_dashboards(kibana_host, user, password)
-    create_spaces(kibana_host, user, password)
-    create_roles(es)
-    create_users(es, new_users_password)
+    es = elastic.get_elastic_client(es_host, user, password)
+    mappings.put_all_mappings(es)
+    kibana.post_index_patterns(kibana_host, user, password)
+    kibana.post_viz(kibana_host, user, password)
+    kibana.post_dashboards(kibana_host, user, password)
+    kibana.create_spaces(kibana_host, user, password)
+    kibana.post_canvas_workpad(kibana_host, user, password)
+    security.create_es_roles(es)
+    security.create_users(es, new_users_password)
+    security.provision_spaces_access(kibana_host, user, password)
 
     # Let's get the lay of the land for our company and partner resources.
-    threading.Thread(target=index_company_wap_locations, args=[es], daemon=True).start()
-    threading.Thread(target=index_partner_towers, args=[es], daemon=True).start()
-    threading.Thread(target=update_oldest_heartbeats, args=[es], daemon=True).start()
+    threading.Thread(target=wap.index_company_wap_locations, args=[es], daemon=True).start()
+    threading.Thread(target=cell_partners.index_partner_towers, args=[es], daemon=True).start()
+    threading.Thread(target=heartbeats.update_oldest_heartbeats, args=[es], daemon=True).start()
 
     # Start some users probing
-    threading.Thread(target=generate_probes, args=[es], daemon=True).start()
-    threading.Thread(target=generate_angry_customer_probes, args=[es], daemon=True).start()
+    threading.Thread(target=probes.generate_probes, args=[es], daemon=True).start()
+    threading.Thread(target=bad_gateway_customer.generate_angry_customer_probes, args=[es], daemon=True).start()
 
     # Keep-alive
     time.sleep(run_seconds)
