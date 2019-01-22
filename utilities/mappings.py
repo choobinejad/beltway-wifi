@@ -57,11 +57,22 @@ def _put_network_activity_mapping(es):
         })
         print('Configured "network_events" mapping')
     else:
-        print('"network_events" mapping alreadty configured')
+        print('"network_events" mapping already configured')
+
+
+def _put_cases_mapping(es):
+    if not es.indices.exists('cases'):
+        with open('./utilities/cases_mapping.json', 'r') as f:
+            mapping = json.load(f)
+        es.indices.create('cases', body=mapping)
+        print('Configured "cases" mapping')
+    else:
+        print('"cases" mapping already configured')
 
 
 def put_all_mappings(es):
     _put_towers_mapping(es)
     _put_waps_mapping(es)
     _put_network_activity_mapping(es)
+    _put_cases_mapping(es)
     time.sleep(1)
