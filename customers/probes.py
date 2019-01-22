@@ -21,8 +21,8 @@ def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
             location=random_dc_point()
         )
         record['enrichments'] = dict(
-            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
-            premium = False
+            gateways=list({_look_up_gateway(es, ssid) for ssid in record['destination']}),
+            premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
 
@@ -33,5 +33,5 @@ def generate_probes(es):
         if len(result[1]) > 0:
             print('Problem indexing probe activity...', result)
         else:
-            print('Indexed Probes ({})'.format(result[0]))
+            print('Indexed Background Probes ({})'.format(result[0]))
         time.sleep(random.randint(1, 8))

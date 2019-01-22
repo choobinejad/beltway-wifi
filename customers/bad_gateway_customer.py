@@ -81,8 +81,8 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             location=random_bad_gateway_point(),
         )
         record['enrichments'] = dict(
-            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
-            premium=True
+            gateways=list({_look_up_gateway(es, ssid) for ssid in record['destination']}),
+            premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
         # This doc places the `mac` at some other random point in the area where it will be colocated with
@@ -102,7 +102,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
         record['enrichments'] = dict(
             gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_cheat_note='colocation: {}'.format(colocation),
-            premium = True
+            premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
         # Create another colocation event, a bit further in the past, to support dwell/spans.
@@ -121,7 +121,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
         record['enrichments'] = dict(
             gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_note='colocation: {}'.format(colocation),
-            premium=True
+            premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
 
