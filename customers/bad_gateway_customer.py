@@ -4,20 +4,17 @@ import time
 from datetime import datetime
 from elasticsearch.helpers import bulk
 from utilities.identifiers import generate_words
-from utilities.geo import random_bad_gateway_point, random_dc_point
+from utilities.geo import random_bad_gateway_point, random_dc_point, bad_gateway_polygon
 
 
-def _retrieve_bad_gateways(es):
+def _retrieve_bad_gateways(es, bad_gateway_polygon=bad_gateway_polygon):
     bad_gateway_waps = [b['key'] for b in es.search(
         'waps', '_doc', body=\
         {
           "query": {
             "bool": {
               "must": [
-                {"geo_polygon": {"location": {"points": [
-                    [-77.045190, 39.004399], [-77.034190, 39.005399], [-77.003890, 39.000199],
-                    [-77.018490, 38.983399], [-77.047990, 38.986099], [-77.045190, 39.004399]
-                ]}}}
+                {"geo_polygon": {"location": {"points": bad_gateway_polygon}}}
               ]
             }
           },
