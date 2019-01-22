@@ -1,7 +1,6 @@
 from datetime import datetime
 import random
 import time
-from functools import lru_cache
 from elasticsearch.helpers import bulk
 from utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
 from utilities.geo import random_dc_point
