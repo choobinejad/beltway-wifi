@@ -18,48 +18,5 @@
         }
       }
     ]
-  },
-  "analyst": {
-    "indices": [
-      {
-        "names": [
-          "towers*",
-          "waps*",
-          "network_events*"
-        ],
-        "privileges": [
-          "read",
-          "monitor",
-          "read_cross_cluster",
-          "view_index_metadata"
-        ],
-        "field_security": {
-          "grant": [
-            "*"
-          ]
-        }
-      }
-    ]
-  },
-  "developer": {
-    "cluster": [],
-    "indices": [
-      {
-        "names": [
-          "*"
-        ],
-        "privileges": [
-          "all"
-        ],
-        "field_security": {
-          "grant": [
-            "*"
-          ]
-        }
-      }
-    ],
-    "run_as": [
-      "analyst"
-    ]
   }
 }
