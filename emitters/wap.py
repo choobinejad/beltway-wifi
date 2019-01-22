@@ -24,6 +24,7 @@ def generate_wap_points():
 
 def generate_wap_docs():
     with open('./emitters/bad_gateway_waps.json', 'r') as f:
+        # TODO this is method 1 of 3 for detecting ssid-gateway relationships
         bad_gateway_waps = json.load(f)
     for ordinal, position in generate_wap_points():
         doc = dict(

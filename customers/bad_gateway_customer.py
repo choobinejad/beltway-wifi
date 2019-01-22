@@ -3,11 +3,12 @@ from random import shuffle
 import time
 from datetime import datetime
 from elasticsearch.helpers import bulk
-from utilities.identifiers import generate_words
+from utilities.identifiers import generate_words, _look_up_gateway
 from utilities.geo import random_bad_gateway_point, random_dc_point, bad_gateway_polygon
 
 
 def _retrieve_bad_gateways(es, bad_gateway_polygon=bad_gateway_polygon):
+    # TODO this is method 2 of 3 for detecting ssid-gateway relationships
     bad_gateway_waps = [b['key'] for b in es.search(
         'waps', '_doc', body=\
         {
@@ -78,6 +79,9 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             destination=[random.choice(bad_gateway_waps) for i in range(random.randint(min_cx, max_cx))],
             destination_class='SSID',
             location=random_bad_gateway_point(),
+        )
+        record['enrichments'] = dict(
+            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
             premium=True
         )
         yield record
@@ -93,9 +97,12 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             action='probe request',
             destination=[generate_words() for j in range(random.randint(1, 3))],
             destination_class='SSID',
-            location=colocation,
+            location=colocation
+        )
+        record['enrichments'] = dict(
+            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_cheat_note='colocation: {}'.format(colocation),
-            premium=True
+            premium = True
         )
         yield record
         # Create another colocation event, a bit further in the past, to support dwell/spans.
@@ -110,6 +117,9 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             destination=[generate_words() for j in range(random.randint(1, 3))],
             destination_class='SSID',
             location=colocation,
+        )
+        record['enrichments'] = dict(
+            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_note='colocation: {}'.format(colocation),
             premium=True
         )

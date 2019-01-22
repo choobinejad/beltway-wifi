@@ -1,12 +1,13 @@
 from datetime import datetime
 import random
 import time
+from functools import lru_cache
 from elasticsearch.helpers import bulk
-from utilities.identifiers import generate_mac_address, generate_words
+from utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
 from utilities.geo import random_dc_point
 
 
-def _generate_probe_docs(min_n=50, max_n=200, min_cx=3, max_cx=9):
+def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
     for i in range(random.randint(min_n, max_n)):
         record = dict(
             _op_type='index',
@@ -20,12 +21,16 @@ def _generate_probe_docs(min_n=50, max_n=200, min_cx=3, max_cx=9):
             destination_class='SSID',
             location=random_dc_point()
         )
+        record['enrichments'] = dict(
+            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
+            premium = False
+        )
         yield record
 
 
 def generate_probes(es):
     while True:
-        result = bulk(es, _generate_probe_docs())
+        result = bulk(es, _generate_probe_docs(es))
         if len(result[1]) > 0:
             print('Problem indexing probe activity...', result)
         else:
