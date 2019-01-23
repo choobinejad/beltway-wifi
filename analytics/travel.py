@@ -1,18 +1,6 @@
-import sys
 from datetime import datetime, timedelta
 from collections import Counter
-
-
-def _progress(count, total, status=''):
-    bar_len = 100
-    filled_len = int(round(bar_len * count / float(total)))
-
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
-
-    sys.stdout.write('[{}] {}{} ...{}\r'.format(bar, percents, '%', status))
-    sys.stdout.flush()
-
+from utilities import common
 
 def _generate_companion_query(start, end, geohash, radius):
     companion = \
@@ -110,7 +98,7 @@ def find_companions(source, es):
                 results.append((timestamp, geohash, companions))
             unique_companions.update(companions)
         parent_count += 1
-        _progress(parent_count, len(r))
+        common.progress(parent_count, len(r))
 
     end = datetime.now()
     print("\n{} queries | {} seconds | {} seconds per query".format(
