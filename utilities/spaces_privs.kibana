@@ -6,6 +6,38 @@
           "names": [
             "towers*",
             "waps*",
+            "network_events*"
+          ],
+          "privileges": [
+            "read",
+            "monitor",
+            "read_cross_cluster",
+            "view_index_metadata"
+          ],
+          "field_security": {
+            "grant": [
+              "*"
+            ]
+          }
+        }
+      ]
+    },
+    "kibana":{
+      "global":[],
+      "space":{
+        "analyst":[
+          "read"
+        ]
+      }
+    }
+  },
+    "super-analyst": {
+    "elasticsearch": {
+      "indices": [
+        {
+          "names": [
+            "towers*",
+            "waps*",
             "network_events*",
             "cases*"
           ],
@@ -38,17 +70,17 @@
       "indices": [
         {
           "names": [
-            "*"
+            "towers*",
+            "waps*",
+            "network_events*",
+            ".*"
           ],
           "privileges": [
             "all"
           ],
           "field_security": {
             "grant": [
-              "towers*",
-              "waps*",
-              "network_events*",
-              ".*"
+              "*"
             ]
           }
         }

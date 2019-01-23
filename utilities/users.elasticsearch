@@ -7,6 +7,15 @@
     "reporting_user",
     "analyst"
   ],
+    "super-analyst": [
+    "kibana_user_secure_spaces",
+    "machine_learning_user",
+    "watcher_user",
+    "monitoring_user",
+    "reporting_user",
+    "analyst",
+    "super-analyst"
+  ],
   "developer": [
     "watcher_admin",
     "kibana_user_secure_spaces",
