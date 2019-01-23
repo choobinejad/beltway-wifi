@@ -6,7 +6,8 @@
           "names": [
             "towers*",
             "waps*",
-            "network_events*"
+            "network_events*",
+            "cases*"
           ],
           "privileges": [
             "read",
@@ -44,7 +45,10 @@
           ],
           "field_security": {
             "grant": [
-              "*"
+              "towers*",
+              "waps*",
+              "network_events*",
+              ".*"
             ]
           }
         }
