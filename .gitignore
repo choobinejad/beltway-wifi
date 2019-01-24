@@ -1,4 +1,7 @@
+# custom
+node_modeules/
 .idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
