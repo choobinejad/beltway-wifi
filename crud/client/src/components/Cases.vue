@@ -8,7 +8,7 @@
         <button type="button" class="btn btn-success btn-sm" v-b-modal.xcase-modal>Create</button>
         <br><br>
 
-        <!-- _cases table -->
+        <!-- xcases table -->
         <table class="table table-hover">
           <thead>
             <tr>
@@ -93,7 +93,7 @@
                       label-for="form-xcase-id-edit-input">
           <b-form-input id="form-xcase-id-edit-input"
                         type="text"
-                        v-model="editForm.xcase_id"
+                        v-model="editForm.case_id"
                         required
                         placeholder="Enter Case ID">
           </b-form-input>
@@ -167,7 +167,7 @@ export default {
       axios.post(path, payload)
         .then(() => {
           this.getCases();
-          this.message = 'Case created or overwritten.';
+          this.message = 'Case created or overwritten.!!!!1';
           this.showMessage = true;
         })
         .catch((error) => {
@@ -177,7 +177,7 @@ export default {
         });
     },
     updateCase(payload, caseID) {
-      const path = `http://localhost:5000/books/${caseID}`;
+      const path = `http://localhost:5000/cases/${caseID}`;
       axios.put(path, payload)
         .then(() => {
           this.getCases();
@@ -191,7 +191,7 @@ export default {
         });
     },
     removeCase(caseID) {
-      const path = `http://localhost:5000/books/${caseID}`;
+      const path = `http://localhost:5000/cases/${caseID}`;
       axios.delete(path)
         .then(() => {
           this.getCases();
