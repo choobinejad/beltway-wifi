@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from collections import Counter
+from hashlib import sha256
 from utilities import common
+
 
 def _generate_companion_query(start, end, geohash, radius):
     companion = \
@@ -36,8 +38,8 @@ def _generate_companion_query(start, end, geohash, radius):
     return companion
 
 
-def find_companions(source, es):
-    print('\n' * 2)
+def find_companions(es, source, index=True):
+    print('\n')
     start = datetime.now()
     query = \
         {
@@ -104,4 +106,30 @@ def find_companions(source, es):
     print("\n{} queries | {} seconds | {} seconds per query".format(
         query_count, (end-start).seconds, (end-start).seconds/(query_count + 1))
     )
+
+    case_id = sha256(source.encode()).hexdigest()
+    es.index(
+        'cases',
+        '_doc',
+        body=dict(
+            case_id=case_id,
+            updated=datetime.utcnow().isoformat(),
+            subject='John Q. Private',
+            subject_mac=source,
+            unique_companions=list(unique_companions),
+            counted_incidents=[{'companion': k, 'count': v} for k, v in counter.items()],
+            incident_detail=[
+                dict(
+                    companions=row[2],
+                    location=row[1],
+                    time_range=dict(
+                        gte=datetime.fromtimestamp(row[0]/1000.0).isoformat(),
+                        lte=(datetime.fromtimestamp(row[0]/1000.0) + timedelta(seconds=300)).isoformat()
+                    )
+                ) for row in results
+            ]
+        ),
+        id=case_id
+    )
+
     return counter, results[:10], unique_companions
