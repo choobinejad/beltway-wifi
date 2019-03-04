@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 import fire
 from prettytable import PrettyTable
 from utilities.elastic import get_elastic_client
@@ -7,7 +8,10 @@ from analytics.travel import find_companions
 
 def companions(es_host, user, password, mac):
     es = get_elastic_client(es_host, user, password)
-    counter, result, unique_companions = find_companions(mac, es)
+    if mac == 'recommend':
+        mac = suggest(es_host, user, password).replace('\n', '')
+        print('\nSkeiNet recommends analyzing this valued customer: {}'.format(mac))
+    counter, result, unique_companions = find_companions(es, mac)
 
     # Print out the companions list
     print('\nThe `companions` algorithm identified {} unique companions for {}. They are:'.format(
@@ -48,12 +52,12 @@ def suggest(es_host, user, password):
                 "top_term": {
                     "terms": {
                         "field": "source",
-                        "size": 1
+                        "size": random.randint(1, 10)
                     }
                 }
             }
         }
-    )['aggregations']['top_term']['buckets'][0]['key']
+    )['aggregations']['top_term']['buckets'][-1]['key']
     return '\n{}\n'.format(seed)
 
 
