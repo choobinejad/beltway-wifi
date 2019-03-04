@@ -10,6 +10,7 @@ from emitters import cell_partners
 from emitters import heartbeats
 from customers import probes
 from customers import bad_gateway_customer
+# from crud import app
 
 
 def run(es_host, kibana_host, user, password, new_users_password, run_seconds=7200):
@@ -45,6 +46,9 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     # Start some users probing
     threading.Thread(target=probes.generate_probes, args=[es], daemon=True).start()
     threading.Thread(target=bad_gateway_customer.generate_angry_customer_probes, args=[es], daemon=True).start()
+
+    # Run other services
+    # threading.Thread(target=app.run, args=[es], daemon=True).start()
 
     # Keep-alive
     time.sleep(run_seconds)
