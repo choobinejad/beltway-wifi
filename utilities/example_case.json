@@ -1,0 +1,21 @@
+{
+  "case_id": "1234-abcd-5678-efab",
+  "updated": "2019-01-22T15:55:00",
+  "unique_companions": ["aa:aa:aa:aa:aa:aa", "aa:aa:aa:aa:aa:aa"],
+  "counted_incidents": [
+    {
+      "companion": "aa:aa:aa:aa:aa:aa",
+      "count": 53
+    }
+  ],
+  "incident_detail": [
+    {
+      "companions": ["aa:aa:aa:aa:aa:aa", "aa:aa:aa:aa:aa:aa"],
+      "location": "dqcq0mp0",
+      "time_range": {
+        "gte": "2019-01-22T15:55:00",
+        "lte": "2019-01-22T15:55:00"
+      }
+    }
+  ]
+}
