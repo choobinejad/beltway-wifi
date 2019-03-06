@@ -27,9 +27,9 @@ def _put_network_activity_mapping(es):
         with open('./utilities/config/network_events_mapping.json', 'r') as f:
             mapping = json.load(f)
         es.indices.put_template('network_events', body=mapping)
-        print('Configured "network_events" mapping')
+        print('Configured "network_events" template')
     else:
-        print('"network_events" mapping already configured')
+        print('"network_events" template already configured')
 
 
 def put_all_mappings(es):
