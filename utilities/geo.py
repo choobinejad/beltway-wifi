@@ -1,6 +1,7 @@
 import random
 
 
+# TODO make this change over time for a more believable demo...
 bad_gateway_polygon = [
     [-77.045190, 39.004399], [-77.034190, 39.005399], [-77.003890, 39.000199],
     [-77.018490, 38.983399], [-77.047990, 38.986099], [-77.045190, 39.004399]
