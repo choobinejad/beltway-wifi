@@ -1,7 +1,6 @@
 import json
 import requests
 from requests.auth import HTTPBasicAuth
-from elasticsearch import Elasticsearch
 
 
 pattern_ids = ['towers,waps', 'waps', 'towers', 'network_events', 'towers,waps*', 'waps*', 'towers*', 'network_events*']
@@ -40,7 +39,7 @@ def get_index_patterns(kibana_base, user, password):
 
 
 def post_index_patterns(kibana_base, user, password):
-    with open('./utilities/index_patterns.kibana', 'r') as f:
+    with open('./utilities/config/index_patterns.kibana', 'r') as f:
         index_patterns = json.load(f)
 
     for pattern in index_patterns:
@@ -72,7 +71,7 @@ def get_viz(kibana_base, user, password):
 
 
 def post_viz(kibana_base, user, password):
-    with open('./utilities/visualizations.kibana', 'r') as f:
+    with open('./utilities/config/visualizations.kibana', 'r') as f:
         vizs = json.load(f)
 
     for viz in vizs:
@@ -104,7 +103,7 @@ def get_dashboards(kibana_base, user, password):
 
 
 def post_dashboards(kibana_base, user, password):
-    with open('./utilities/dashboards.kibana', 'r') as f:
+    with open('./utilities/config/dashboards.kibana', 'r') as f:
         dbs = json.load(f)
 
     for db in dbs:
@@ -146,7 +145,7 @@ def get_canvas_intro(kibana_base, user, password):
 
 
 def post_canvas_workpad(kibana_base, user, password):
-    with open('./utilities/intro_workpad.kibana', 'r') as f:
+    with open('./utilities/config/intro_workpad.kibana', 'r') as f:
         workpad = json.load(f)
     requests.delete(
         url='{}/api/canvas/workpad/workpad-intro-architecture'.format(kibana_base),
