@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 def create_es_roles(es):
     existing_roles = es.xpack.security.get_role().keys()
-    with open('./utilities/roles.elasticsearch', 'r') as f:
+    with open('./utilities/config/roles.elasticsearch', 'r') as f:
         roles = json.load(f)
     for role, body in roles.items():
         if role in existing_roles:
@@ -17,7 +17,7 @@ def create_es_roles(es):
 
 def create_users(es, account_password):
     existing_users = es.xpack.security.get_user().keys()
-    with open('./utilities/users.elasticsearch', 'r') as f:
+    with open('./utilities/config/users.elasticsearch', 'r') as f:
         users = json.load(f)
     for user, roles in users.items():
         if user in existing_users:
@@ -34,7 +34,7 @@ def create_users(es, account_password):
 
 
 def provision_spaces_access(kibana_base, user, password):
-    with open('./utilities/spaces_privs.kibana', 'r') as f:
+    with open('./utilities/config/spaces_privs.kibana', 'r') as f:
         privs = json.load(f)
     for role, config in privs.items():
         r = requests.put(
