@@ -10,7 +10,6 @@ from emitters import cell_partners
 from emitters import heartbeats
 from customers import probes
 from customers import bad_gateway_customer
-# from crud import app
 
 
 def run(es_host, kibana_host, user, password, new_users_password, run_seconds=7200):
