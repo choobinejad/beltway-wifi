@@ -46,9 +46,6 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     threading.Thread(target=probes.generate_probes, args=[es], daemon=True).start()
     threading.Thread(target=bad_gateway_customer.generate_angry_customer_probes, args=[es], daemon=True).start()
 
-    # Run other services
-    # threading.Thread(target=app.run, args=[es], daemon=True).start()
-
     # Keep-alive
     time.sleep(run_seconds)
     print('Timer! End of demo feeds.')
