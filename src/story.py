@@ -1,18 +1,20 @@
-import time
 import threading
+import time
+
 import fire
+from customers import bad_gateway_customer
+from customers import probes
+from emitters import cell_partners
+from emitters import wap
 from utilities import elastic
 from utilities import kibana
-from utilities import security
 from utilities import mappings
-from emitters import wap
-from emitters import cell_partners
-from emitters import heartbeats
-from customers import probes
-from customers import bad_gateway_customer
+from utilities import security
+
+from src.emitters import heartbeats
 
 
-def run(es_host, kibana_host, user, password, new_users_password, run_seconds=7200):
+def run(es_host, kibana_host, user, password, new_users_password, speed=8, run_seconds=31e6, verify_certs=True):
     """
     Run the main demo.
 
@@ -21,12 +23,14 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     :param user: ES/Kibana username to connect with
     :param password: ES/Kibana username to connect with
     :param new_users_password: the desired password for the new analyst/developer users, if they don't already exist
+    :param speed: int, 1=fast, 8=default, 16=slow. Speed 8 creates about 1.5gb of `network_events` per day.
     :param run_seconds: How long to keep the demo streams alive.
+    :param verify_certs: bool, whether the ES client should verify ES server certs
     :return: None
     """
 
     # First let's configure our Elasticsearch indices and Kibana settings
-    es = elastic.get_elastic_client(es_host, user, password)
+    es = elastic.get_elastic_client(es_host, user, password, verify_certs=verify_certs)
     mappings.put_all_mappings(es)
     kibana.post_index_patterns(kibana_host, user, password)
     kibana.post_viz(kibana_host, user, password)
@@ -43,7 +47,7 @@ def run(es_host, kibana_host, user, password, new_users_password, run_seconds=72
     threading.Thread(target=heartbeats.update_oldest_heartbeats, args=[es], daemon=True).start()
 
     # Start some users probing
-    threading.Thread(target=probes.generate_probes, args=[es], daemon=True).start()
+    threading.Thread(target=probes.generate_probes, args=[es, speed], daemon=True).start()
     threading.Thread(target=bad_gateway_customer.generate_angry_customer_probes, args=[es], daemon=True).start()
 
     # Keep-alive

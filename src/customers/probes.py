@@ -1,9 +1,11 @@
-from datetime import datetime
 import random
 import time
+from datetime import datetime
+
 from elasticsearch.helpers import bulk
-from utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
 from utilities.geo import random_dc_point
+
+from src.utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
 
 
 def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
@@ -27,11 +29,11 @@ def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
         yield record
 
 
-def generate_probes(es):
+def generate_probes(es, speed=8):
     while True:
         result = bulk(es, _generate_probe_docs(es))
         if len(result[1]) > 0:
             print('Problem indexing probe activity...', result)
         else:
             print('Indexed Background Probes ({})'.format(result[0]))
-        time.sleep(random.randint(1, 8))
+        time.sleep(random.randint(1, int(speed)))

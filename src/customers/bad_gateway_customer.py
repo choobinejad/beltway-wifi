@@ -1,10 +1,12 @@
 import random
-from random import shuffle
 import time
 from datetime import datetime
+from random import shuffle
+
 from elasticsearch.helpers import bulk
-from utilities.identifiers import generate_words, _look_up_gateway
 from utilities.geo import random_bad_gateway_point, random_dc_point, bad_gateway_polygon
+
+from src.utilities.identifiers import generate_words, _look_up_gateway
 
 
 def _retrieve_bad_gateways(es, bad_gateway_polygon=bad_gateway_polygon):

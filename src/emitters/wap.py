@@ -1,9 +1,11 @@
-import random
 import json
-from hashlib import md5
+import random
 from datetime import datetime
-from utilities.identifiers import generate_mac_address, generate_words
+from hashlib import md5
+
 from elasticsearch.helpers import parallel_bulk
+
+from src.utilities.identifiers import generate_mac_address, generate_words
 
 
 def frange(start, stop, step, precision=5):
