@@ -3,9 +3,9 @@ import time
 from datetime import datetime
 
 from elasticsearch.helpers import bulk
-from src.utilities.geo import random_dc_point
+from utilities.geo import random_dc_point
 
-from src.utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
+from utilities.identifiers import generate_mac_address, generate_words, look_up_gateway
 
 
 def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
@@ -23,7 +23,7 @@ def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
             location=random_dc_point()
         )
         record['enrichments'] = dict(
-            gateways=list({_look_up_gateway(es, ssid) for ssid in record['destination']}),
+            gateways=list({look_up_gateway(es, ssid) for ssid in record['destination']}),
             premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
