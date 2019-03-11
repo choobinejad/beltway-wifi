@@ -5,13 +5,8 @@ from hashlib import md5
 
 from elasticsearch.helpers import parallel_bulk
 
-from src.utilities.identifiers import generate_mac_address, generate_words
-
-
-def frange(start, stop, step, precision=5):
-    while start < stop:
-        yield int(start * 10**precision) / 10**precision
-        start += step
+from utilities.identifiers import generate_mac_address, generate_words
+from utilities.common import frange
 
 
 def generate_wap_points():
