@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 from elasticsearch.helpers import bulk
-from utilities.geo import random_dc_point
+from src.utilities.geo import random_dc_point
 
 from src.utilities.identifiers import generate_mac_address, generate_words, _look_up_gateway
 
