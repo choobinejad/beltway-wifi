@@ -6,7 +6,7 @@ from random import shuffle
 from elasticsearch.helpers import bulk
 from utilities.geo import random_bad_gateway_point, random_dc_point, bad_gateway_polygon
 
-from src.utilities.identifiers import generate_words, _look_up_gateway
+from utilities.identifiers import generate_words, look_up_gateway
 
 
 def _retrieve_bad_gateways(es, bad_gateway_polygon=bad_gateway_polygon):
@@ -83,7 +83,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             location=random_bad_gateway_point(),
         )
         record['enrichments'] = dict(
-            gateways=list({_look_up_gateway(es, ssid) for ssid in record['destination']}),
+            gateways=list({look_up_gateway(es, ssid) for ssid in record['destination']}),
             premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
         yield record
@@ -102,7 +102,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             location=colocation
         )
         record['enrichments'] = dict(
-            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
+            gateways=[look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_cheat_note='colocation: {}'.format(colocation),
             premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
@@ -121,7 +121,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
             location=colocation,
         )
         record['enrichments'] = dict(
-            gateways=[_look_up_gateway(es, ssid) for ssid in record['destination']],
+            gateways=[look_up_gateway(es, ssid) for ssid in record['destination']],
             admin_note='colocation: {}'.format(colocation),
             premium=True if int('0x' + record['source'].replace(':', ''), 0) % 5 == 0 else False
         )
