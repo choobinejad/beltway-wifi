@@ -11,7 +11,7 @@ from utilities import kibana
 from utilities import mappings
 from utilities import security
 
-from src.emitters import heartbeats
+from emitters import heartbeats
 
 
 def run(es_host, kibana_host, user, password, new_users_password, speed=8, run_seconds=31e6, verify_certs=True):
