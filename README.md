@@ -1,15 +1,18 @@
 ### How to use
 
-Do a few things:
+On an old-school machine:
 ```bash
 # Go to the code.
-cd beltway-wifi
+cd beltway-wifi/src
 
 # You are using a virtual environment, right? Right?
 source activate $VIRTUAL_ENV_NAME
 
 # Install the reqs
 pip install -r requirements.txt
+
+# Test it
+python -m unittest discover
 
 # Make it go.
 python story.py\
@@ -20,7 +23,16 @@ python story.py\
  --password=$YOUR_PASSWORD\
  --new_users_password=$NEW_USERS_PASSWORD\
  --speed=8\
- --verify_certs=True
+ --verify_certs=$VERIFY_CERTS
+```
+
+In a container:
+```bash
+cd beltway-wifi
+sh build.sh
+docker run beltway-wifi
+# TODO: auto-test on build
+# You can still run the tests manually with `docker run -i beltway-wifi`
 ```
 
 - `es_host`: e.g. `https://localhost:9200`  
