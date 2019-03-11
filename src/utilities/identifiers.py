@@ -51,7 +51,7 @@ def generate_words(n=2):
 
 
 @lru_cache(maxsize=128000)
-def _look_up_gateway(es, ssid):
+def look_up_gateway(es, ssid):
     # TODO this is method 2 of 3 for detecting ssid-gateway relationships
     # TODO move this def to a common module
     query = {"_source": "gateway", "size": 1, "query": {"term": {"ssid.keyword": {"value": ssid}}}}
