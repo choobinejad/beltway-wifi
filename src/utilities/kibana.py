@@ -5,20 +5,20 @@ from requests.auth import HTTPBasicAuth
 
 pattern_ids = ['towers,waps', 'waps', 'towers', 'network_events', 'towers,waps*', 'waps*', 'towers*', 'network_events*']
 visualizations = [
-    'Healthy WAPs', 'Stale WAPs',
-    'Healthy Towers', 'Stale Towers',
-    'Beltway WiFi WAPs (Reporting: DOWN)',
-    'Beltway WiFi WAPs (Reporting: UP)',
-    'Partner Cell Towers (Reporting: DOWN)',
-    'Partner Cell Towers (Reporting: UP)',
-    'Infrastructure Checkin Health',
-    'Busiest SSIDs',
-    'User Activity',
-    'Active Users -- Most Probes',
-    'Gateways w/ DOWN WAPs (Significant Terms)',
-    'Gateways w/ DOWN WAPs (Terms)'
+    'HealthyWAPs', 'StaleWAPs',
+    'HealthyTowers', 'StaleTowers',
+    'BeltwayWiFiWAPsReportingDOWN',
+    'BeltwayWiFiWAPsReportingUP',
+    'PartnerCellTowersReportingDOWN',
+    'PartnerCellTowersReportingUP',
+    'InfrastructureCheckinHealth',
+    'BusiestSSIDs',
+    'UserActivity',
+    'ActiveUsersMostProbes',
+    'GatewaysWithDOWN WAPsSignificantTerms',
+    'GatewaysWithDOWNWAPsTerms'
 ]
-dashboards = ['Infrastructure', 'Users Overview', 'Infrastructure (WAPs Only)']
+dashboards = ['Infrastructure', 'UsersOverview', 'InfrastructureWAPsOnly']
 
 
 def get_index_patterns(kibana_base, user, password):
