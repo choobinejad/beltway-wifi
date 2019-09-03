@@ -56,7 +56,7 @@ def look_up_gateway(es, ssid):
     # TODO move this def to a common module
     query = {"_source": "gateway", "size": 1, "query": {"term": {"ssid.keyword": {"value": ssid}}}}
     try:
-        r = es.search('waps', '_doc', body=query)['hits']['hits'][0]['_source']['gateway']
+        r = es.search('waps', body=query)['hits']['hits'][0]['_source']['gateway']
     except IndexError:
         r = None
     return r
