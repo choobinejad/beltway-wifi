@@ -13,7 +13,6 @@ def generate_tower_docs():
             yield dict(
                 _op_type='index',
                 _index='towers',
-                _type='_doc',
                 _id=md5(str([record[1], record[2], record[3], record[4], record[5]]).encode()).hexdigest(),
                 radio=record[0],
                 mcc=record[1].zfill(3),

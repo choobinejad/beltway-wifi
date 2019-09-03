@@ -12,26 +12,24 @@
 
   },
   "mappings": {
-    "_doc": {
-      "properties": {
-        "location": {
-          "type": "geo_point"
-        },
-        "user_point": {
-          "type": "alias",
-          "path": "location"
-        }
+    "properties": {
+      "location": {
+        "type": "geo_point"
       },
-      "dynamic_templates": [
-        {
-          "strings_as_keywords": {
-            "match_mapping_type": "string",
-            "mapping": {
-              "type": "keyword"
-            }
+      "user_point": {
+        "type": "alias",
+        "path": "location"
+      }
+    },
+    "dynamic_templates": [
+      {
+        "strings_as_keywords": {
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword"
           }
         }
-      ]
-    }
+      }
+    ]
   }
 }

@@ -12,7 +12,7 @@ from utilities.identifiers import generate_words, look_up_gateway
 def _retrieve_bad_gateways(es, bad_gateway_polygon=bad_gateway_polygon):
     # TODO this is method 2 of 3 for detecting ssid-gateway relationships
     bad_gateway_waps = [b['key'] for b in es.search(
-        'waps', '_doc', body=\
+        'waps', body=\
         {
           "query": {
             "bool": {
@@ -59,7 +59,7 @@ def _get_angry_customers(es):
           }
         }
     angry_customers = [
-        b['key'] for b in es.search('network_events_*', '_doc', body=query)['aggregations']['macs']['buckets']
+        b['key'] for b in es.search('network_events', body=query)['aggregations']['macs']['buckets']
     ][:-1]
     shuffle(angry_customers)
     return angry_customers
@@ -72,8 +72,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
         # This doc places the `mac` in the bad service zone.
         record = dict(
             _op_type='index',
-            _index='network_events_{}'.format(datetime.utcnow().strftime('%Y.%m.%d')),
-            _type='_doc',
+            _index='network_events',
             event_time=datetime.fromtimestamp(datetime.utcnow().timestamp()-random.randint(5, 10)).isoformat(),
             source=mac,
             source_class='MAC Address',
@@ -91,8 +90,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
         # all the macs in this batch.
         record = dict(
             _op_type='index',
-            _index='network_events_{}'.format(datetime.utcnow().strftime('%Y.%m.%d')),
-            _type='_doc',
+            _index='network_events',
             event_time=datetime.fromtimestamp(datetime.utcnow().timestamp()-random.randint(5, 10)).isoformat(),
             source=mac,
             source_class='MAC Address',
@@ -110,8 +108,7 @@ def _generate_angry_customer_docs(es, min_cx=1, max_cx=3):
         # Create another colocation event, a bit further in the past, to support dwell/spans.
         record = dict(
             _op_type='index',
-            _index='network_events_{}'.format(datetime.utcnow().strftime('%Y.%m.%d')),
-            _type='_doc',
+            _index='network_events',
             event_time=datetime.fromtimestamp(datetime.utcnow().timestamp()-random.randint(20, 40)).isoformat(),
             source=mac,
             source_class='MAC Address',

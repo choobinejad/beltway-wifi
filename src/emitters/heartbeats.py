@@ -41,19 +41,18 @@ def create_es_query(minutes, size, override_range=None, density_agg=False):
 
 
 def _generate_heartbeats(es):
-    docs = es.search('towers,waps', '_doc', body=create_es_query(31, 299))
-    if docs['hits']['total'] == 0:
+    docs = es.search('towers,waps', body=create_es_query(31, 299))
+    if docs['hits']['total']['value'] == 0:
         time.sleep(5)
     docs = docs['hits']['hits']
     densest_bucket_start = es.search(
-        'towers,waps', '_doc', body=create_es_query(2, 0, density_agg=True)
+        'towers,waps', body=create_es_query(2, 0, density_agg=True)
     )['aggregations']['b']['keys'][0][:-5]
     densest_bucket_end = (
             datetime.strptime(densest_bucket_start, '%Y-%m-%dT%H:%M:%S') + timedelta(seconds=10)
     ).isoformat()
     docs += es.search(
         'towers,waps',
-        '_doc',
         body=create_es_query(
             2,
             random.randint(50, 200),
@@ -65,7 +64,6 @@ def _generate_heartbeats(es):
         yield dict(
             _op_type='update',
             _index=doc['_index'],
-            _type='_doc',
             _id=doc['_id'],
             doc=dict(heartbeat=datetime.utcnow().isoformat())
         )
