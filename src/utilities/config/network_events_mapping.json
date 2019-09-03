@@ -1,8 +1,15 @@
 {
-  "index_patterns": ["network_events*"],
+  "index_patterns": ["network_events_*"],
   "settings": {
     "number_of_shards": 1,
-    "number_of_replicas": 1
+    "number_of_replicas": 1,
+    "index": {
+      "lifecycle": {
+        "name": "network_events",
+        "rollover_alias": "network_events"
+      }
+    }
+
   },
   "mappings": {
     "_doc": {
