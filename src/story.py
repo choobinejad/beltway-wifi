@@ -31,7 +31,7 @@ def run(es_host, kibana_host, user, password, new_users_password, speed=8, run_s
 
     # First let's configure our Elasticsearch indices and Kibana settings
     es = elastic.get_elastic_client(es_host, user, password, verify_certs=verify_certs)
-    mappings.put_all_mappings(es)
+    mappings.put_all_mappings(es, es_host, user, password)  # TODO remove host+user+pw when Python lib supports ILM
     kibana.post_index_patterns(kibana_host, user, password)
     kibana.post_viz(kibana_host, user, password)
     kibana.post_dashboards(kibana_host, user, password)

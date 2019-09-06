@@ -4,21 +4,19 @@
     "number_of_replicas": 1
   },
   "mappings": {
-    "_doc": {
-      "properties": {
-        "location": {
-          "type": "geo_point"
-        },
-        "wap_point": {
-          "type": "alias",
-          "path": "location"
-        },
-        "mac": {
-          "type": "keyword"
-        },
-        "gateway": {
-          "type": "keyword"
-        }
+    "properties": {
+      "location": {
+        "type": "geo_point"
+      },
+      "wap_point": {
+        "type": "alias",
+        "path": "location"
+      },
+      "mac": {
+        "type": "keyword"
+      },
+      "gateway": {
+        "type": "keyword"
       }
     }
   }

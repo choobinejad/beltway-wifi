@@ -27,7 +27,6 @@ def generate_wap_docs():
         doc = dict(
             _op_type='index',
             _index='waps',
-            _type='_doc',
             _id=md5(str(position).encode()).hexdigest(),
             location=position,
             mac=generate_mac_address(oui='ab:12:c3', ordinal=ordinal),

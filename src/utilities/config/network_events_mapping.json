@@ -1,30 +1,35 @@
 {
-  "index_patterns": ["network_events*"],
+  "index_patterns": ["network_events_*"],
   "settings": {
     "number_of_shards": 1,
-    "number_of_replicas": 1
+    "number_of_replicas": 1,
+    "index": {
+      "lifecycle": {
+        "name": "network_events",
+        "rollover_alias": "network_events"
+      }
+    }
+
   },
   "mappings": {
-    "_doc": {
-      "properties": {
-        "location": {
-          "type": "geo_point"
-        },
-        "user_point": {
-          "type": "alias",
-          "path": "location"
-        }
+    "properties": {
+      "location": {
+        "type": "geo_point"
       },
-      "dynamic_templates": [
-        {
-          "strings_as_keywords": {
-            "match_mapping_type": "string",
-            "mapping": {
-              "type": "keyword"
-            }
+      "user_point": {
+        "type": "alias",
+        "path": "location"
+      }
+    },
+    "dynamic_templates": [
+      {
+        "strings_as_keywords": {
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword"
           }
         }
-      ]
-    }
+      }
+    ]
   }
 }

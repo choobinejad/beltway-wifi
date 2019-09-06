@@ -12,8 +12,7 @@ def _generate_probe_docs(es, min_n=50, max_n=200, min_cx=3, max_cx=9):
     for i in range(random.randint(min_n, max_n)):
         record = dict(
             _op_type='index',
-            _index='network_events_{}'.format(datetime.utcnow().strftime('%Y.%m.%d')),
-            _type='_doc',
+            _index='network_events',
             event_time=datetime.fromtimestamp(datetime.utcnow().timestamp()-random.randint(5, 10)).isoformat(),
             source=generate_mac_address(),
             source_class='MAC Address',
