@@ -57,12 +57,7 @@ def _put_network_activity_mapping(es, temp_es_host, temp_es_user, temp_es_passwo
     if not es.indices.exists_alias('network_events'):
         with open('./utilities/config/network_events_bootstrap.json', 'r') as f:
             bootstrap = json.load(f)
-        # es.indices.put_alias(
-        #     index='network_events_{}-000001'.format(datetime.strftime(datetime.utcnow(), '%Y.%m.%d')),
-        #     name='network_events',
-        #     body=alias
-        # )
-        es.indices.create(index='network_events_{}-000001'.format(datetime.strftime(datetime.utcnow(), '%Y.%m.%d')), body=bootstrap)
+        es.indices.create(index='network_events-000001'.format(datetime.strftime(datetime.utcnow(), '%Y.%m.%d')), body=bootstrap)
 
 
 def put_all_mappings(es, temp_es_host, temp_es_user, temp_es_password):
